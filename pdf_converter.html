@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PDF to Image Converter</title>
+</head>
+
+<body>
+
+<h1>PDF to Image Converter</h1>
+<p>Upload your PDF to convert into images</p>
+
+<input type="file" id="pdfFile">
+<button onclick="convertPDF()">Convert</button>
+
+<p id="result"></p>
+
+<script>
+function convertPDF() {
+const file = document.getElementById('pdfFile').files[0];
+if(!file) {
+alert("Please select a PDF file first!");
+return;
+}
+document.getElementById('result').innerHTML = "Converting " + file.name + "... (this is demo message)";
+}
+</script>
+
+</body>
+</html>
