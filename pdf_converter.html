@@ -7,21 +7,60 @@
 <body>
 
 <h1>PDF to Image Converter</h1>
-<p>Upload your PDF to convert into images</p>
 
 <input type="file" id="pdfFile">
 <button onclick="convertPDF()">Convert</button>
 
-<p id="result"></p>
+<div id="output"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
 <script>
-function convertPDF() {
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
+async function convertPDF() {
+
 const file = document.getElementById('pdfFile').files[0];
-if(!file) {
-alert("Please select a PDF file first!");
+
+if (!file) {
+alert("Please select a PDF file!");
 return;
 }
-document.getElementById('result').innerHTML = "Converting " + file.name + "... (this is demo message)";
+
+const reader = new FileReader();
+
+reader.onload = async function() {
+
+const typedarray = new Uint8Array(this.result);
+
+const pdf = await pdfjsLib.getDocument(typedarray).promise;
+
+for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+
+const page = await pdf.getPage(pageNum);
+
+const canvas = document.createElement("canvas");
+
+const context = canvas.getContext("2d");
+
+const viewport = page.getViewport({ scale: 1.5 });
+
+canvas.height = viewport.height;
+canvas.width = viewport.width;
+
+await page.render({
+canvasContext: context,
+viewport: viewport
+}).promise;
+
+document.getElementById("output").appendChild(canvas);
+
+}
+
+};
+
+reader.readAsArrayBuffer(file);
+
 }
 </script>
 
