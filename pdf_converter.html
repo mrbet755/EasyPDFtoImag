@@ -52,8 +52,22 @@ await page.render({
 canvasContext: context,
 viewport: viewport
 }).promise;
+const container = document.createElement("div");
 
-document.getElementById("output").appendChild(canvas);
+const downloadBtn = document.createElement("button");
+downloadBtn.innerText = "Download Image";
+
+downloadBtn.onclick = function() {
+const link = document.createElement("a");
+link.download = "page-" + pageNum + ".png";
+link.href = canvas.toDataURL();
+link.click();
+};
+
+container.appendChild(canvas);
+container.appendChild(downloadBtn);
+
+document.getElementById("output").appendChild(container);
 
 }
 
